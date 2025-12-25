@@ -32,11 +32,11 @@ sudo dnf install python3-dbus python3-gobject
 2. Clone this repository and install the script in your local bin:
 
 ```bash
-git clone https://github.com/<your-user>/kde-media-sleep-inhibitor.git
-cd kde-media-sleep-inhibitor
+git clone https://github.com/<your-user>/media-sleep-inhibitor.git
+cd media-sleep-inhibitor
 mkdir -p ~/.local/bin
-cp media-inhibit.py ~/.local/bin/kde-media-sleep-inhibitor
-chmod +x ~/.local/bin/kde-media-sleep-inhibitor
+cp media-sleep-inhibitor.py ~/.local/bin/media-sleep-inhibitor.py
+chmod +x ~/.local/bin/media-sleep-inhibitor.py
 ```
 
 
@@ -45,7 +45,7 @@ chmod +x ~/.local/bin/kde-media-sleep-inhibitor
 Run the daemon in a terminal inside your KDE Plasma session:
 
 ```bash
-~/.local/bin/kde-media-sleep-inhibitor
+~/.local/bin/media-sleep-inhibitor
 ```
 
 Then start your media player and begin playback. As long as at least one MPRIS player reports `Playing`, the script will keep the session from sleeping or locking. Stop with `Ctrl+C` in the terminal.
@@ -56,7 +56,7 @@ To start the script automatically on login using KDE Autostart:
 
 1. Open **System Settings → Workspace → Autostart**.
 2. Add a new **Login Script**.
-3. Select `~/.local/bin/kde-media-sleep-inhibitor`.
+3. Select `~/.local/bin/media-sleep-inhibitor.py`.
 
 The script will now run whenever you log into Plasma.
 
@@ -68,12 +68,12 @@ Alternatively, you can manage it as a user systemd service for better control an
 
 ```bash
 mkdir -p ~/.config/systemd/user
-cat > ~/.config/systemd/user/kde-media-sleep-inhibitor.service << 'EOF'
+cat > ~/.config/systemd/user/media-sleep-inhibitor.service << 'EOF'
 [Unit]
 Description=Inhibit KDE sleep while MPRIS media is playing
 
 [Service]
-ExecStart=%h/.local/bin/kde-media-sleep-inhibitor
+ExecStart=%h/.local/bin/media-sleep-inhibitor.py
 Restart=on-failure
 
 [Install]
@@ -85,25 +85,16 @@ EOF
 
 ```bash
 systemctl --user daemon-reload
-systemctl --user enable --now kde-media-sleep-inhibitor.service
+systemctl --user enable --now media-sleep-inhibitor.service
 ```
 
 3. Check status and logs if needed:
 
 ```bash
-systemctl --user status kde-media-sleep-inhibitor.service
-journalctl --user -u kde-media-sleep-inhibitor.service -f
+systemctl --user status media-sleep-inhibitor.service
+journalctl --user -u media-sleep-inhibitor.service -f
 ```
 
+## Troubeshooting
 
-With this setup, the script will run as part of your user session and automatically ensure that audio playback via MPRIS prevents KDE from going to sleep or locking the screen.
-<span style="display:none">[^1][^2][^3]</span>
-
-<div align="center">⁂</div>
-
-[^1]: interests.linux_desktop_customization
-
-[^2]: preferences.media_control
-
-[^3]: location.distro
-
+If you run into anything odd (e.g., no inhibit entry when Spotify plays), checking `journalctl --user -u media-sleep-inhibitor.service -f` while starting playback will show useful logs
