@@ -62,6 +62,8 @@ The script will now run whenever you log into Plasma.
 
 ## Autostart via systemd (user service)
 
+*recommended approach*
+
 Alternatively, you can manage it as a user systemd service for better control and logging.
 
 1. Create a user service unit:
@@ -88,13 +90,11 @@ systemctl --user daemon-reload
 systemctl --user enable --now media-sleep-inhibitor.service
 ```
 
-3. Check status and logs if needed:
+## Troubeshooting
+
+If you run into anything odd (e.g., no inhibit entry when Spotify plays), check the logs while starting playback.
 
 ```bash
 systemctl --user status media-sleep-inhibitor.service
 journalctl --user -u media-sleep-inhibitor.service -f
 ```
-
-## Troubeshooting
-
-If you run into anything odd (e.g., no inhibit entry when Spotify plays), checking `journalctl --user -u media-sleep-inhibitor.service -f` while starting playback will show useful logs
